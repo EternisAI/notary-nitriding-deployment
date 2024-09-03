@@ -26,16 +26,6 @@ RUN pwd && echo "Current path logged"  # Added this line to log the current path
 
 RUN cargo install --path crates/notary/server
 
-FROM debian:latest as acw_build
-
-RUN apt-get update &&  \
-    apt-get install -y ca-certificates curl && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN curl -O https://s3.amazonaws.com/amazoncloudwatch-agent/debian/amd64/latest/amazon-cloudwatch-agent.deb && \
-    dpkg -i -E amazon-cloudwatch-agent.deb
-
-
 FROM ubuntu:latest
 WORKDIR /root/app
 # Install pkg-config and libssl-dev for async-tungstenite to use (as explained above)
@@ -57,9 +47,6 @@ LABEL org.opencontainers.image.description="An implementation of the notary serv
 
 
 COPY --from=builder_nitriding /nitriding-daemon/nitriding /bin/start.sh /bin/
-
-COPY --from=acw_build /opt/aws/amazon-cloudwatch-agent /opt/aws/amazon-cloudwatch-agent
-COPY amazon-cloudwatch-agent.json /opt/aws/amazon-cloudwatch-agent/bin/default_linux_config.json
 
 ENV RUN_IN_CONTAINER="True"
 
