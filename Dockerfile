@@ -20,7 +20,7 @@ FROM rust:bookworm AS builder_notary
 RUN rustup default 1.79.0
 
 WORKDIR /usr/src/tlsn
-RUN git clone --branch tls-tee https://github.com/eternisai/tlsn .
+RUN git clone --branch key-sync https://github.com/eternisai/tlsn .
 # COPY /eternis-tlsn .
 RUN pwd && echo "Current path logged"  # Added this line to log the current path
 
@@ -38,7 +38,7 @@ RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-reco
 # Copy default fixture folder for default usage
 COPY --from=builder_notary /usr/src/tlsn/crates/notary/server/fixture /app/fixture/
 # Copy default config folder for default usage
-COPY config_dev.yml /app/config/
+COPY config_leader.yml /app/config/
 COPY --from=builder_notary /usr/local/cargo/bin/notary-server /app/
 
 # Label to link this image with the repository in Github Container Registry (https://docs.github.com/en/packages/learn-github-packages/connecting-a-repository-to-a-package#connecting-a-repository-to-a-container-image-using-the-command-line)
