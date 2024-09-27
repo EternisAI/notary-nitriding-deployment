@@ -11,9 +11,9 @@ RUN ARCH=${TARGETARCH} make -C nitriding-daemon/ nitriding
 
 # Use the intermediate builder image to add our files.  This is necessary to
 # avoid intermediate layers that contain inconsistent file permissions.
-COPY  start.sh /bin/
-RUN chown root:root  /bin/start.sh
-RUN chmod 0755       /bin/start.sh
+COPY  start_follower.sh /bin/
+RUN chown root:root  /bin/start_follower.sh
+RUN chmod 0755       /bin/start_follower.sh
 
 
 FROM rust:bookworm AS builder_notary
@@ -46,7 +46,7 @@ LABEL org.opencontainers.image.source=https://github.com/tlsnotary/tlsn
 LABEL org.opencontainers.image.description="An implementation of the notary server in Rust."
 
 
-COPY --from=builder_nitriding /nitriding-daemon/nitriding /bin/start.sh /bin/
+COPY --from=builder_nitriding /nitriding-daemon/nitriding /bin/start_follower.sh /bin/
 
 ENV RUN_IN_CONTAINER="True"
 
