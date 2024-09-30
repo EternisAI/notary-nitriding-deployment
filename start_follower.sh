@@ -3,8 +3,10 @@
 nitriding -fqdn follower.cluster.eternis.ai -fqdn-leader leader.cluster.eternis.ai -appwebsrv http://127.0.0.1:7047 -ext-pub-port 443 -intport 8080 &
 echo "[sh] Started nitriding."
 
+sleep 20;
+
 while true; do
-    response=$(curl -s -o /dev/null -w "%{http_code}" https://localhost/enclave/state -k)
+    response=$(curl -s -o /dev/null -w "%{http_code}" https://localhost/enclave -k)
     if [ "$response" = "200" ]; then
         echo "[sh] Nitriding is ready."
         break
