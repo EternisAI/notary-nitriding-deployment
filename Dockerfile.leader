@@ -32,6 +32,7 @@ WORKDIR /root/app
 RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-recommends \
     pkg-config \
     libssl-dev \
+    curl \
     ca-certificates \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
