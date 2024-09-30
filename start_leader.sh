@@ -4,8 +4,8 @@ nitriding -fqdn leader.cluster.eternis.ai -fqdn-leader leader.cluster.eternis.ai
 echo "[sh] Started nitriding."
 
 while true; do
-    response=$(curl -s -o /dev/null -w "%{http_code}" https://localhost/enclave/state -k)
-    if [ "$response" = "200" ]; then
+    response=$(curl -s -o /dev/null -w "%{http_code}" https://localhost/enclave/leader -k)
+    if [ "$response" = "405" ]; then
         echo "[sh] Nitriding is ready."
         break
     else
