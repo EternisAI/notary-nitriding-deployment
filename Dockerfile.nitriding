@@ -11,9 +11,9 @@ RUN ARCH=${TARGETARCH} make -C nitriding-daemon/ nitriding
 
 # Use the intermediate builder image to add our files.  This is necessary to
 # avoid intermediate layers that contain inconsistent file permissions.
-COPY  start_leader.sh /bin/
-RUN chown root:root  /bin/start_leader.sh
-RUN chmod 0755       /bin/start_leader.sh
+COPY  start_nitriding.sh /bin/
+RUN chown root:root  /bin/start_nitriding.sh
+RUN chmod 0755       /bin/start_nitriding.sh
 
 
 FROM rust:bookworm AS builder_notary
@@ -39,7 +39,7 @@ RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-reco
 # Copy default fixture folder for default usage
 COPY --from=builder_notary /usr/src/tlsn/crates/notary/server/fixture /app/fixture/
 # Copy default config folder for default usage
-COPY config_leader.yml /app/config/
+COPY config_nitriding.yml /app/config/
 COPY --from=builder_notary /usr/local/cargo/bin/notary-server /app/
 
 # Label to link this image with the repository in Github Container Registry (https://docs.github.com/en/packages/learn-github-packages/connecting-a-repository-to-a-package#connecting-a-repository-to-a-container-image-using-the-command-line)
@@ -47,8 +47,8 @@ LABEL org.opencontainers.image.source=https://github.com/tlsnotary/tlsn
 LABEL org.opencontainers.image.description="An implementation of the notary server in Rust."
 
 
-COPY --from=builder_nitriding /nitriding-daemon/nitriding /bin/start_leader.sh /bin/
+COPY --from=builder_nitriding /nitriding-daemon/nitriding /bin/start_nitriding.sh /bin/
 
 ENV RUN_IN_CONTAINER="True"
 
-CMD ["start_leader.sh"]
+CMD ["start_nitriding.sh"]
